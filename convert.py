@@ -1,5 +1,6 @@
 # This Project convert an image by a dixce-made picture
 # In this program I do not use dice number 6. because number 5 is more suitable for darker blocks
+# Written by Pooyan Zarif
 import sys
 from PIL import Image, ImageOps
 import numpy as np
@@ -14,7 +15,7 @@ args = vars(parser.parse_args())
 pic_name = args['name']
 
 # number of Blocks in X dimention
-block_no_x = args['column']
+block_no_x = int(args['column'])
 
 # set the math of dice images
 dice_path= "dices\\"
@@ -45,8 +46,10 @@ w,h = img2.size
 px = img2.load()
 bw=bh = w // block_no_x
 block_no_y = h // bh
+if bw <2:
+    print("the size of picture is less than the size of dices. use less columns. (eg: -col 50)")
+    exit(0)
 buffer= np.zeros((block_no_x,block_no_y))
-
 # This part of code devide the image into blocks and calculate the average of darkness of the bolcks.
 for i in range(0, block_no_x):
     for j in range(0,block_no_y):
@@ -56,6 +59,7 @@ for i in range(0, block_no_x):
                 s+= px[i * bw + k, j * bh + l]
         s = s//(bw*bh)
         buffer[i,j]=255-s
+
 
 buffer = normalize(buffer)
 # make a new image base on dice matrix
